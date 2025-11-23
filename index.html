@@ -7,14 +7,19 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Noto Sans TC',sans-serif;background:#E3F2FD;color:#333;text-align:center;min-height:100vh;padding:20px 20px 80px}
-  .header{background:#1976D2;height:60px;padding:0 16px;display:flex;align-items:center}
-  .logo{width:36px;height:auto;margin-right:10px}
-  .header-text{color:#fff;font-size:19px;font-weight:900}
-  .header-sub{color:#fff;font-size:12px;opacity:0.9}
+  .header{background:#1976D2;height:60px;padding:0 16px;display:flex;align-items:center;justify-content:flex-start}
+  /* 官方 Logo 放大到跟官網完全一樣大小（約 110px 寬） */
+  .logo{width:110px;height:auto}
+  
   h1{font-size:28px;font-weight:900;color:#1976D2;margin:40px 0 8px;line-height:1.2}
   .subtitle{font-size:17px;color:#555;margin-bottom:30px;font-weight:600}
-  .cartoon{max-width:280px;margin:0 auto 30px;display:block}
-  .cartoons{background:url('https://www.pxmart.com.tw/CdnRoot/promotion/survey/survey-cartoons.png') center bottom/contain no-repeat;height:160px;margin:40px auto 20px}
+  
+  /* 問號公仔：放大 + 移除下方多餘空白 */
+  .cartoon{max-width:320px;margin:10px auto 20px;display:block}
+  
+  /* 完全移除公仔群那整塊空白（你說要刪除） */
+  /* .cartoons 已註解掉 */
+  
   .box{background:#fff;padding:35px 28px;border-radius:20px;max-width:400px;margin:0 auto 40px;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
   h2{font-size:24px;color:#1976D2;margin-bottom:16px;font-weight:900}
   .desc{font-size:16px;line-height:1.7;color:#444;margin-bottom:25px}
@@ -29,24 +34,21 @@
 <body>
 
 <div class="header">
+  <!-- 只保留官方 Logo，放大到跟官網一模一樣大小，文字已刪除 -->
   <img src="https://www.pxmart.com.tw/_next/static/media/logo-pxmart.890788ed.svg" class="logo"
-       onerror="this.src='https://via.placeholder.com/36x36/E3F2FD/1976D2?text=全聯'">
-  <div>
-    <div class="header-text">全聯福利中心</div>
-    <div class="header-sub">PX Mart Welfare Center</div>
-  </div>
+       onerror="this.src='https://via.placeholder.com/110x40/E3F2FD/1976D2?text=全聯'">
 </div>
 
 <h1>全聯超級週年慶開跑！</h1>
 <div class="subtitle">買1送1 再回饋送 $50 購物金</div>
 
 <img src="https://www.pxmart.com.tw/_next/static/media/img-surveyEmpty-character.f8827491.png" class="cartoon"
-     onerror="this.src='https://via.placeholder.com/300x300/E3F2FD/1976D2?text=全聯週年慶'">
+     onerror="this.src='https://via.placeholder.com/320x320/E3F2FD/1976D2?text=全聯週年慶'">
 
-<div class="cartoons"></div>
+<!-- 公仔群整塊已完全移除，無多餘空白 -->
 
 <div class="box">
-  <h2>消費滿 $300 立即送 $50 購物金</h2>
+  <h2>消費$300送 $50 購物金</h2>
   <div class="desc">
     2025 全聯超級週年慶火熱進行中！<br>
     超過300款商品買1送1，消費滿300元再直接送您 $50 購物金！
