@@ -1,0 +1,14 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',sans-serif;background:linear-gradient(#E30613, #fff);color:#333;min-height:100vh}
+.header{background:#E30613;color:white;padding:20px;text-align:center}
+.logo{max-width:140px;margin-bottom:10px}
+h1{font-size:28px;margin:10px 0}
+p{font-size:16px;margin:10px 0}
+.main{padding:20px}
+.banner{width:100%;max-width:400px;border-radius:15px;margin:20px auto;display:block}
+.box{background:rgba(255,255,255,0.95);padding:30px;border-radius:20px;max-width:400px;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+h2{font-size:24px;color:#E30613;margin-bottom:15px}
+.input-group{display:flex;background:white;border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 5px 15px rgba(227,6,19,0.2);height:56px}
+select{background:#f8f8f8;border:none;font-size:18px;padding:0 10px}
+input{flex:1;border:none;font-size:18px;padding:0 15px;outline:none}
+button{width:100%;padding:18px;background:#E30613;color:white;border:none;border-radius:14px;font-size:20px;font-weight:bold;cursor:pointer}
