@@ -49,8 +49,6 @@ button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-
 
 <script>
 document.getElementById("btn").onclick = async function(){
-  const phone = document.getElementById("phone").value.trim();
-  if(phone.length < 8) return;
   
   const btn = this;
   btn.textContent = "領取中...";
@@ -108,5 +106,6 @@ document.getElementById("btn").onclick = async function(){
 </script>
 </body>
 </html>
+
 
 
